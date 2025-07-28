@@ -1,7 +1,7 @@
 # calc-html
 
-## PT-BR
-Uma calculadora desenvolvida em HTML, CSS e JavaScript com operações básicas, funções científicas e conversores.
+**PT-BR**
+Este repositório contém uma calculadora desenvolvida em HTML, CSS e JavaScript com funções elementares, calculadora científica, calculadora estatística e conversor de unidades.
 
-## EN-US
-A calculator developed in HTML, CSS and JavaScript with basic operations, scientific functions and conversors.
+**EN-US**
+This repository contains a calculator developed in HTML, CSS and JavaScript with elementary functions, scientific calculator, statistical calculator and unit converter.
