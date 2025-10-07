@@ -363,16 +363,156 @@
         }
 
         // Estatística
+        function tem(elemento, lista) {
+            for (let i = 0; i <= lista.length; i++) {
+                if (elemento == lista[i]) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        function listaParaTabela(lista) {
+            if (!Array.isArray(lista)) {
+                return;
+            }
+
+            let classes = [];
+            let frequencias = [];
+
+            for (let i = 0; i < lista.length; i++) {
+                if (!tem(lista[i], classes)) {
+                    classes[classes.length] = lista[i];
+                    frequencias[frequencias.length] = 1;
+                } else {
+                    for (let j = 0; j < classes.length; j++) {
+                        if (classes[j] == lista[i]) {
+                            frequencias[j] += 1;
+                        }
+                    }
+                }
+            }
+
+            registros = []
+
+            for (let i = 0; i < classes.length; i++) {
+                registros[registros.length] = {
+                    "classe": classes[i],
+                    "frequencia": frequencias[i],
+                }
+            }
+
+            return registros;
+        }
+
+        function classes(lista) {
+            let t = listaParaTabela(lista);
+            let x = [];
+
+            for (let i = 0; i < t.length; i++) {
+                x[x.length] = t[i].classe;
+            }
+
+            return x;
+        }
+
+        function frequencias(lista) {
+            let t = listaParaTabela(lista);
+            let x = [];
+
+            for (let i = 0; i < t.length; i++) {
+                x[x.length] = t[i].frequencia;
+            }
+
+            return x;
+        }
+
+        function soma(lista) {
+            let s = 0;
+
+            for (let i = 0; i < lista.length; i++) {
+                s += lista[i];
+            }
+
+            return s;
+        }
+
+        function mediana(lista) {
+            let x = classes(lista.sort());
+            let f = frequencias(lista.sort());
+
+            let acumulada = [];
+
+            for (let i = 0; i < x.length; i++) {
+                acumulada[i] = 0;
+            }
+
+            for (let i = 0; i < x.length; i++) {
+                for (let j = 0; j <= i; j++) {
+                    acumulada[i] += f[j];
+                }
+            }
+
+            let meio = soma(f) / 2;
+
+            let i = 0;
+
+            while (i < acumulada.length) {
+                if (acumulada[i] > meio) {
+                    return x[i];
+                    break;
+                } else if (acumulada[i] == meio) {
+                    return (x[i] + x[i + 1]) / 2;
+                    break;
+                }
+
+                i++;
+            }
+
+            return;
+        }
+
+        function moda(lista) {
+            let x = classes(lista);
+            let f = frequencias(lista);
+
+            let modal = f[0];
+
+            for (let i = 0; i < x.length; i++) {
+                if (f[i] > modal) {
+                    modal = x[i];
+                }
+            }
+
+            return modal;
+        }
+
+        function mostraTabela(lista) {
+            let x = classes(lista);
+            let f = frequencias(lista);
+
+            let texto = "<table><th><tr><td>Classe<td></td><td>Frequência</td></tr></th>";
+
+            for (let i = 0; i < x.length; i++) {
+                texto += `<tr><td>${x[i]}</td><td>${f[i]}</td></tr>`;
+            }
+
+            texto += "</table>";
+
+            return texto;
+        }
+
         function efetuaEstatistica(lista) {
             if (!Array.isArray(lista)) {
                 return
             }
 
-            let quantidade = lista.length
-            let soma = 0.0
-            let somaquad = 0.0
-            let maior = lista[0]
-            let menor = lista[0]
+            let quantidade = lista.length;
+            let soma = 0.0;
+            let somaquad = 0.0;
+            let maior = lista[0];
+            let menor = lista[0];
 
             for (let i = 0; i < lista.length; i++) {
                 soma += lista[i]
@@ -390,16 +530,28 @@
             let media = soma / quantidade
             let desvio = Math.sqrt(Math.abs(media ** 2 - somaquad / quantidade))
 
-            let resultado = {
+            let t = listaParaTabela(lista);
+            
+            let x = [];
+            let f = [];
+
+            let registros = t.length;
+
+            let mod = moda(lista);
+            let med = mediana(lista);
+
+            return {
                 "quantidade": corrige(quantidade),
                 "soma": corrige(soma),
                 "media": corrige(media),
                 "desvio": corrige(desvio),
                 "maximo": corrige(maior),
                 "minimo": corrige(menor),
+                "classes": corrige(registros),
+                "mediana": corrige(med),
+                "moda": corrige(mod),
+                "tabela": mostraTabela(lista),
             }
-
-            return resultado
         }
 
         function processaEstatistica() {
@@ -408,7 +560,6 @@
             let lista = []
 
             for (let i = 0; i < entradas.length; i++) {
-                console.log(entradas[i].value) // debug
                 lista[lista.length] = parseFloat(entradas[i].value)
             }
 
